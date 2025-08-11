@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Paleta WCAG Anki</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>Generador de Paletas </h1>
+                    <p>Usa las plaetas WCAG para tus aplicaciones y Anki</p>
+                </div>
+                <div class="theme-toggle">
+                    <button id="themeToggle" class="theme-toggle-btn" aria-label="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                        <span class="theme-text">Modo Oscuro</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="unified-layout">
+            <!-- Columna 1: Generador de Paleta -->
+            <section class="palette-generator-column">
+                <div class="section-card">
+                    <h2>Generador de Paleta</h2>
+                    <div class="controls">
+                        <button id="generateBtn" class="btn-primary">Generar Paleta</button>
+                        <button id="exportCssBtn" class="btn-secondary">Exportar CSS</button>
+                        <button id="exportJsonBtn" class="btn-secondary">Exportar JSON</button>
+                    </div>
+                    <div id="colorPalette" class="color-palette"></div>
+                </div>
+            </section>
+
+            <!-- Columna 2: Comprobador de Contraste -->
+            <section class="contrast-checker-column">
+                <div class="section-card">
+                    <h2>Comprobador de Contraste</h2>
+                    
+                    <div class="view-toggle">
+                        <button id="simpleViewBtn" class="view-btn active">Vista Simple</button>
+                        <button id="advancedViewBtn" class="view-btn">Vista Avanzada</button>
+                    </div>
+
+                    <div id="simpleView" class="view-content">
+                        <div class="color-inputs-compact">
+                            <div class="color-input-group-compact">
+                                <label for="foregroundColor">Color de texto:</label>
+                                <div class="input-row">
+                                    <input type="color" id="foregroundColor" value="#000000">
+                                    <input type="text" id="foregroundHex" value="#000000" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group-compact">
+                                <label for="backgroundColor">Color de fondo:</label>
+                                <div class="input-row">
+                                    <input type="color" id="backgroundColor" value="#ffffff">
+                                    <input type="text" id="backgroundHex" value="#ffffff" maxlength="7">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="advancedView" class="view-content hidden">
+                        <div class="advanced-color-inputs-compact">
+                            <div class="color-input-group-compact">
+                                <label for="advBackgroundColor">Fondo general:</label>
+                                <div class="input-row">
+                                    <input type="color" id="advBackgroundColor" value="#ffffff">
+                                    <input type="text" id="advBackgroundHex" value="#ffffff" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group-compact">
+                                <label for="titleColor">Color del título:</label>
+                                <div class="input-row">
+                                    <input type="color" id="titleColor" value="#000000">
+                                    <input type="text" id="titleHex" value="#000000" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group-compact">
+                                <label for="paragraphColor">Color de párrafos:</label>
+                                <div class="input-row">
+                                    <input type="color" id="paragraphColor" value="#333333">
+                                    <input type="text" id="paragraphHex" value="#333333" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group-compact">
+                                <label for="hrColor">Color de línea (hr):</label>
+                                <div class="input-row">
+                                    <input type="color" id="hrColor" value="#cccccc">
+                                    <input type="text" id="hrHex" value="#cccccc" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group-compact">
+                                <label for="buttonBgColor">Fondo del botón:</label>
+                                <div class="input-row">
+                                    <input type="color" id="buttonBgColor" value="#007bff">
+                                    <input type="text" id="buttonBgHex" value="#007bff" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group-compact">
+                                <label for="buttonTextColor">Texto del botón:</label>
+                                <div class="input-row">
+                                    <input type="color" id="buttonTextColor" value="#ffffff">
+                                    <input type="text" id="buttonTextHex" value="#ffffff" maxlength="7">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contrast-results-compact">
+                        <div id="simpleResults">
+                            <div class="contrast-ratio-compact">
+                                <span>Ratio de contraste: </span>
+                                <span id="contrastRatio" class="ratio-value">9.92:1</span>
+                            </div>
+                            <div class="wcag-compliance-compact">
+                                <div class="compliance-row">
+                                    <span>WCAG AA Normal:</span>
+                                    <span id="wcagAA" class="pass">✓ PASA</span>
+                                    <span>WCAG AAA Normal:</span>
+                                    <span id="wcagAAA" class="pass">✓ PASA</span>
+                                </div>
+                                <div class="compliance-row">
+                                    <span>WCAG AA Grande:</span>
+                                    <span id="wcagAALarge" class="pass">✓ PASA</span>
+                                    <span>WCAG AAA Grande:</span>
+                                    <span id="wcagAAALarge" class="pass">✓ PASA</span>
+                                </div>
+                            </div>
+                            
+                            <div id="simpleSuggestions" class="suggestions-panel-compact">
+                                <h4>💡 Sugerencias Inteligentes</h4>
+                                <div id="simpleSuggestionsList" class="suggestions-list"></div>
+                            </div>
+                        </div>
+
+                        <div id="advancedResults" class="hidden">
+                            <div class="contrast-analysis-compact">
+                                <h4>Análisis de Contraste por Elemento</h4>
+                                <div class="element-contrast-compact">
+                                    <div class="contrast-item-compact">
+                                        <span>Título vs Fondo:</span>
+                                        <span id="titleContrast">21:1</span>
+                                        <span id="titleCompliance" class="pass">✓ AAA</span>
+                                    </div>
+                                    <div class="contrast-item-compact">
+                                        <span>Párrafos vs Fondo:</span>
+                                        <span id="paragraphContrast">21:1</span>
+                                        <span id="paragraphCompliance" class="pass">✓ AAA</span>
+                                    </div>
+                                    <div class="contrast-item-compact">
+                                        <span>Línea vs Fondo:</span>
+                                        <span id="hrContrast">3:1</span>
+                                        <span id="hrCompliance" class="pass">✓ AA</span>
+                                    </div>
+                                    <div class="contrast-item-compact">
+                                        <span>Botón (texto vs fondo):</span>
+                                        <span id="buttonContrast">4.5:1</span>
+                                        <span id="buttonCompliance" class="pass">✓ AA</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="advancedSuggestions" class="suggestions-panel-compact">
+                                <h4>💡 Sugerencias Inteligentes</h4>
+                                <div id="advancedSuggestionsList" class="suggestions-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Columna 3: Vista Previa -->
+            <section class="preview-column">
+                <div class="section-card">
+                    <h2>Vista Previa</h2>
+                    <div id="contrastPreview" class="contrast-preview-compact">
+                        <div class="preview-header">
+                            <h3>comprobador<br>contraste</h3>
+                            <div class="play-button-container">
+                                <button class="play-button">▶</button>
+                            </div>
+                        </div>
+                        
+                        <hr class="preview-divider">
+                        
+                        <div class="preview-content">
+                            <div class="contrast-badge">
+                                <span class="badge-text">contraste</span>
+                            </div>
+                            <p class="preview-description">
+                                Si una combinación de colores <strong>permite</strong> que el usuario pueda leer y distinguir elementos, entonces cumple con los <strong>estándares WCAG</strong>.
+                            </p>
+                            
+                            <div class="info-boxes">
+                                <div class="info-box">
+                                    <div class="info-icon">■</div>
+                                    <div class="info-text">
+                                        El nuevo <strong>comprobador</strong> debe permitir a los desarrolladores verificar el contraste en tiempo real. <em>[Ratio: 21.00:1]</em>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box">
+                                    <div class="info-icon">■</div>
+                                    <div class="info-text">
+                                        ...una nueva herramienta para validar <strong>accesibilidad</strong> y cumplir con los estándares internacionales. <em>[WCAG 2.1]</em>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="preview-demo-section">
+                                <h4>Vista Previa del Contraste</h4>
+                                <p class="demo-description">Este texto demuestra cómo se ve la combinación de colores seleccionada</p>
+                                
+                                <div class="demo-buttons">
+                                    <button class="demo-btn demo-btn-filled">Botón Invertido</button>
+                                    <button class="demo-btn demo-btn-outline">Elemento con Borde</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+<footer>Esta página se creo usando IA, concretamente el editor Kiro, por lo podría tener fallos.</footer>
+</html>
